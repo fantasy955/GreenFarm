@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!--edge浏览器H5兼容设置-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--360浏览器H5兼容设置-->
+    <meta name="renderer" content="webkit"/>
+    <title>绿色农场</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--导入核心文件-->
+    <script src="../../bootstrap3/js/holder.js"></script>
+    <link href="../../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="../../js/top.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../bootstrap3/jquery-1.9.1.min.js"></script>
+    <script src="../../bootstrap3/js/bootstrap.js"></script>
+    <script src="../../js/leftnavigation.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="../../bootstrap3/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/top.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/footer.css"/>
+    <script src="../../js/adddel.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+<div id="my_top"></div>
+<!--导航结束-->
+<!--<div class="container"> -->
+<div style="margin: 0 auto;">
+    <!--左部导航-->
+    <div id="left-navigation"></div>
+    <!--左侧导航结束-->
+    <div class="col-md-10" display="block">
+        <div class="panel panel-default">
+            <ul class="nav nav-tabs">
+                <li><a href="password.html">修改密码</a></li>
+                <li><a href="businessdata.html">个人资料</a></li>
+                <li><a href="upload.html">上传头像</a></li>
+                <li><a href="address.html">收货管理 </a></li>
+                <li><a href="address.html">租赁管理</a></li>
+                <li><a href="myproducts.html">产品管理</a></li>
+                <!--	<li><a href="../business/addRent.html">租赁管理</a></li>
+                    <li><a href="../business/productManager.html">产品管理</a></li>-->
+            </ul>
+            <div class="panel-body">
+                <!--地址显示-->
+                <table class="table table-striped">
+                    <caption>收货地址列表</caption>
+                    <thead>
+                    <tr>
+                        <th>地址类型</th>
+                        <th>收货人姓名</th>
+                        <th>详细地址</th>
+                        <th>联系电话</th>
+                        <th colspan="3">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="list"><!--添加id属性，用于清空数据-->
+
+                    </tbody>
+                </table>
+                <a href="addAddress.html" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span>新增收货地址</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- </div> -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#my_top").append(top_html_business);
+        $("#left-navigation").append(leftNavigationBusiness2);
+        // 加载当前用户的收货地址列表
+        showList();
+        if ($.cookie("avatar") != null) {
+            $("#img-avatar1").attr("src", $.cookie("avatar"));
+        }
+    });
+
+    // 加载收货地址列表
+    function showList() {
+        var url = "../../address/list";
+        $.ajax({
+            "url": url,
+            "type": "POST",
+            "dataType": "json",
+            "success": function (json) {
+                // 常规操作，首先要清空页面上的数据
+                $("#list").empty();
+                // 拿出json中的数据
+                var list = json.data;
+                for (var i = 0; i < list.length; i++) {
+                    // 常规输出,因为数据比较多，只输出2个就可以
+                    console.log(list[i].name + "-" + list.district);
+                    // 对值进行赋值
+                    var html = '<tr>'
+                        + '<td>#{tag}</td>'
+                        + '<td>#{name}</td>'
+                        + '<td>#{district}</td>'
+                        + '<td>#{phone}</td>'
+                        + '<td><a class="btn btn-xs btn-info" href="changeAddress.html?id=#{id}"><span class="fa fa-edit"></span> 修改</a></td>'
+                        + '<td><a class="btn btn-xs add-del btn-info" href="javascript:deleteById(#{id});" ><span class="fa fa-trash-o"></span> 删除</a></td>'
+                        + '<td><a #{is_default} class="btn btn-xs add-def btn-default" href="javascript:setDefault(#{id});">设为默认</a></td>'
+                        + '</tr>';
+                    html = html.replace(/#{id}/g, list[i].id);
+                    html = html.replace(/#{tag}/g, list[i].tag);
+                    html = html.replace(/#{name}/g, list[i].name);
+                    html = html.replace(/#{district}/g, list[i].district);
+                    html = html.replace(/#{phone}/g, list[i].phone);
+
+                    // 设为默认
+                    if (list[i].isDefault == 1) {
+                        html = html.replace("#{is_default}", 'style="display:none;"');
+                    } else {
+                        html = html.replace("#{is_default}", '');
+                    }
+
+                    $("#list").append(html);
+                }
+            }
+        });
+    }
+
+    // 设为默认
+    function setDefault(id) {
+        // 请求地址
+        var url = "../../address/default/" + id;
+        $.ajax({
+            "url": url,
+            "type": "GET",
+            "dataType": "json",
+            "success": function (json) {
+                if (json.state == 200) {
+                    // 成功后，我们将数据重新加载进来
+                    showList();
+                } else {
+                    // 失败
+                    alert(json.message);
+                }
+            },
+            "error": function () {
+                alert("您的登录信息已过期!请重新登录");
+                location.href = "login.html";
+            }
+        });
+    }
+
+    function deleteById(id) {
+        var url = "../../address/delete/" + id;
+        $.ajax({
+            "url": url,
+            "type": "GET",
+            "dataType": "json",
+            "success": function (json) {
+                if (json.state == 200) {
+                    // 成功
+                    alert("删除成功!");
+                    showList();
+                } else {
+                    // 失败
+                    alert(json.message);
+                }
+            },
+            "error": function () {
+                alert("您的登录信息已过期!请重新登录");
+                location.href = "login.html";
+            }
+        });
+    }
+
+
+</script>
+</body>
+
+</html>

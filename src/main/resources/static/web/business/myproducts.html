@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--edge浏览器H5兼容设置-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--360浏览器H5兼容设置-->
+    <meta name="renderer" content="webkit"/>
+    <title>绿色农场</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--导入核心文件-->
+    <script src="../../bootstrap3/js/holder.js"></script>
+    <link href="../../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="../../bootstrap3/jquery-1.9.1.min.js"></script>
+    <script src="../../bootstrap3/js/bootstrap.js"></script>
+    <script src="../../js/top.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/leftnavigation.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="../../bootstrap3/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/top.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/footer.css"/>
+    <script src="../../js/adddel.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layui-v2.5.5/layui/css/layui.css" media="all">
+    <script src="../../layui-v2.5.5/layui/layui.js" charset="utf-8"></script>
+</head>
+<body>
+<div id="my_top"></div>
+<!--导航结束-->
+<!-- <div class="container"> -->
+
+<!--左部导航-->
+<div id="left-navigation"></div>
+
+
+<div class="col-md-10">
+    <div class="panel panel-default">
+        <ul class="nav nav-tabs">
+            <li><a href="myproducts.html">订单管理 </a></li>
+            <li><a href="myproducts.html">租赁管理</a></li>
+            <li><a href="myproducts.html">产品管理</a></li>
+        </ul>
+        <div class="panel-body">
+            <!--产品显示-->
+            <!--<table class="layui-table">-->
+            <!--<caption>我的产品</caption>-->
+            <!--<thead>-->
+            <!--<tr>-->
+            <!--<th text-align="center">产品标题</th>-->
+            <!--<th text-align="center">卖点</th>-->
+            <!--<th text-align="center">单价</th>-->
+            <!--<th text-align="center">库存</th>-->
+            <!--<th text-align="center">状态</th>-->
+            <!--<th text-align="center" colspan="3">操作</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody id="list">&lt;!&ndash;添加id属性，用于清空数据&ndash;&gt;-->
+
+            <!--</tbody>-->
+            <!--</table>-->
+
+            <table class="layui-table"
+                   lay-data="{width: 0, height:0, url:'../../farm_product/myproducts', page:true, id:'productsList',cellMinWidth: 80}"
+                   lay-filter="productsList">
+                <thead>
+                <tr>
+                    <th lay-data="{align:'center'}" colspan="8">我的农产品</th>
+                </tr>
+                <tr>
+                    <th lay-data="{field:'id',hide:true}">ID</th>
+                    <th lay-data="{field:'title'}">标题</th>
+                    <th lay-data="{field:'price'}">单价(元/千克)</th>
+                    <th lay-data="{field:'num'}">库存(千克)</th>
+                    <th lay-data="{field:'statusName'}">状态</th>
+                    <th lay-data="{field:'strTimeUpdate'}">修改时间</th>
+                    <th lay-data="{fixed:'right',width:'30%', unresize:true ,align:'center', toolbar: '#barProduct'}"
+                        rowspan="4">操作
+                    </th>
+                </tr>
+                </thead>
+            </table>
+
+            <script type="text/html" id="barProduct">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">商品信息</a>
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="modify">修改信息</a>
+                <a class="layui-btn layui-btn-xs" lay-event="unshelve">下架</a>
+                <a class="layui-btn layui-btn-xs" lay-event="onshelve">上架</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+
+            <a href="addProduct.html" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span>上架产品</a>
+        </div>
+    </div>
+    <!-- </div> -->
+</div>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+        //监听工具条
+        table.on('tool(productsList)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                // layer.msg('ID：'+ data.id + ' 的查看操作');
+                if (data.statusName == "在售") {
+                    location.href = 'product.html?id=' + data.id;
+                } else {
+                    layer.open({
+                        content: "商品还未上架!",
+                        yes: function (index, layero) {//layero 当前层DOM对象
+                            layer.close(index);
+                        }
+                    });
+                }
+            } else if (obj.event === 'del') {
+                // var data = obj.data;
+                deleteById(data.id);
+            } else if (obj.event === 'unshelve') {
+                // var data = obj.data;
+                unshelveById(data.id);
+            } else if (obj.event === 'onshelve') {
+                // var data = obj.data;
+                onshelveById(data.id);
+            } else if (obj.event === 'modify') {
+                location.href = "updateProductInfo.html?id=" + data.id;
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        // 加载当前商家的产品
+        $("#my_top").append(top_html_business);
+        $("#left-navigation").append(leftNavigationBusiness1);
+        if ($.cookie("avatar") != null) {
+            $("#img-avatar1").attr("src", $.cookie("avatar"));
+        }
+        // console.log('加载商品');
+        // showProductsInfoList();
+    });
+
+    function deleteById(id) {
+        layui.use('layer', function () {
+            layer.confirm('确定删除?', function (index) {
+                var url = "../../farm_product/deleteById/" + id;
+                $.ajax({
+                    "url": url,
+                    "type": "POST",
+                    "dataType": "json",
+                    "success": function (json) {
+                        if (json.state == 200) {
+                            // 成功
+                            layer.open({
+                                content: "删除成功!",
+                                yes: function (index, layero) {//layero 当前层DOM对象
+                                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            // 失败
+                            layer.alert(json.message);
+                        }
+                    },
+                    "error": function () {
+                        layer.open({
+                            content: "您的登录信息已过期!请重新登录!",
+                            yes: function (index, layero) {//layero 当前层DOM对象
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                location.href = "login.html";
+                            }
+                        });
+                    }
+                });
+                layer.close(index);
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+    }
+
+    function unshelveById(id) {
+        layui.use('layer', function () {
+            layer.confirm('确定下架?\n再次上架需要经过审核', function (index) {
+                var url = "../../farm_product/unshelveById/" + id;
+                $.ajax({
+                    "url": url,
+                    "type": "POST",
+                    "dataType": "json",
+                    "success": function (json) {
+                        if (json.state == 200) {
+                            // 成功
+                            layer.open({
+                                content: "下架成功!",
+                                yes: function (index, layero) {//layero 当前层DOM对象
+                                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                    location.reload();
+                                }
+                            });
+                            // showProductsInfoList();
+                        } else {
+                            // 失败
+                            layer.alert(json.message);
+                        }
+                    },
+                    "error": function () {
+                        layer.open({
+                            content: "您的登录信息已过期!请重新登录",
+                            yes: function (index, layero) {//layero 当前层DOM对象
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                location.href = "login.html";
+                            }
+                        });
+                    }
+                });
+                layer.close(index);
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+    }
+
+    function onshelveById(id) {
+        layui.use('layer', function () {
+            layer.confirm('确定提交上架申请吗?', function (index) {
+                var url = "../../farm_product/onshelveById/" + id;
+                $.ajax({
+                    "url": url,
+                    "type": "POST",
+                    "dataType": "json",
+                    "success": function (json) {
+                        if (json.state == 200) {
+                            // 成功
+                            layer.open({
+                                content: "成功添加上架请求!\n请等待管理员审核",
+                                yes: function (index, layero) {//layero 当前层DOM对象
+                                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            // 失败
+                            layer.alert(json.message);
+                        }
+                    },
+                    "error": function () {
+                        layer.open({
+                            content: "您的登录信息已过期!请重新登录",
+                            yes: function (index, layero) {//layero 当前层DOM对象
+                                layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                location.href = "login.html";
+                            }
+                        });
+                    }
+                });
+                layer.close(index);
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+    }
+
+    // 加载收货地址列表
+    function showProductsInfoList() {
+        var url = "../../farm_product/myproducts";
+        $.ajax({
+            "url": url,
+            "type": "POST",
+            "dataType": "json",
+            "success": function (json) {
+                // 常规操作，首先要清空页面上的数据
+                $("#list").empty();
+                // 拿出json中的数据
+                var list = json.data;
+                for (var i = 0; i < list.length; i++) {
+                    // 常规输出,因为数据比较多，只输出2个就可以
+                    // 对值进行赋值
+                    var html = '<tr>'
+                        + "<td lay-data=\"{field:'title', width:80}\">#{title}</td>"
+                        + '<td lay-data="{field:\'sellpoint\', width:80}">#{sellpoint}</td>'
+                        + '<td lay-data="{field:\'price\', width:80}">#{price}元/千克</td>'
+                        + '<td lay-data="{field:\'num\', width:80}">#{num}千克</td>'
+                        + '<td lay-data="{field:\'status\', width:80}">#{status}</td>'
+                        + '<td lay-data="{width:80}"><a class="btn btn-xs btn-info" href="changeProductInfo.html?id=#{id}"><span class="fa fa-edit"></span> 修改信息</a></td>'
+                        + '<td lay-data="{width:80}"><a class="btn btn-xs btn-info" href="javascript:unshelveById(#{id});"><span class="fa fa-edit"></span> 下架</a></td>'
+                        + '<td lay-data="{width:80}"><a class="btn btn-xs add-del btn-info" href="javascript:deleteById(#{id});" ><span class="fa fa-trash-o"></span> 删除</a></td>'
+                        + '</tr>';
+                    html = html.replace(/#{id}/g, list[i].id);
+                    html = html.replace(/#{title}/g, list[i].title);
+                    html = html.replace(/#{sellpoint}/g, list[i].sellPoint);
+                    html = html.replace(/#{price}/g, list[i].price);
+                    html = html.replace(/#{num}/g, list[i].num);
+                    html = html.replace(/#{status}/g, list[i].statusName);
+
+                    $("#list").append(html);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

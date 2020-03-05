@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8"/>
+    <title>绿色农场</title>
+    <!--导入核心文件-->
+    <script src="../../bootstrap3/js/holder.js"></script>
+    <link href="../../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="../../bootstrap3/jquery-1.9.1.min.js"></script>
+    <script src="../../bootstrap3/js/bootstrap.js"></script>
+    <script src="../../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/top.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="../../bootstrap3/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/top.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/footer.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/cart.css"/>
+    <script src="../../js/cart.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>
+<div id="my_top"></div>
+
+<div class="col-md-offset-1 col-md-10">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="fa fa-shopping-cart"></span> 购物车</h3>
+        </div>
+        <div class="panel-body">
+            <!--下面表单中需要添加method，和action=跳转的页面，通过submit提交数据给下一个页面-->
+            <form role="form">
+                <!--购物车表格开始-->
+                <table class="cart-table" width="100%">
+                    <thead>
+                    <tr>
+                        <th width="8%">
+                            <input type="checkbox" class="ckall" onclick="checkall(this)"/>全选
+                        </th>
+                        <th width="110"></th>
+                        <th width="29%">商品</th>
+                        <th width="11%">单价</th>
+                        <th width="15%">数量</th>
+                        <th width="11%">金额</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="cart-list" class="cart-body">
+                    </tbody>
+                </table>
+                <div class="total-bar">
+                    <a href="javascript:selDelCart()" class="cart-del-sel btn btn-default btn-xs">删除所选商品</a>
+                    <span class="pull-right">已选商品
+								<span id="selectCount">0</span>件 总价¥
+							<span id="selectTotal">0</span>元
+
+							</span>
+
+                </div>
+                <div>
+							<span class="pull-right">
+								<input type="button" value="  结  算  " class="btn btn-primary btn-lg link-account"
+                                       onclick="confirm_order()"/>
+							</span>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#my_top").append(top_html);
+        // 在登录之后，会将 头像数据放到cookies中，我们需要在这里取到
+        // 头像的数据，并把它放在cookie中
+        if ($.cookie("avatar") != null) {
+            $("#img-avatar1").attr("src", $.cookie("avatar"));
+        }
+        //获取数据库中该用户的购物车
+        get_cart();
+    });
+
+    //获取当前用户的购物车
+    function get_cart() {
+        var url = "../../cart/get_list";
+        // 发送ajax请求，并处理请求
+        $.ajax({
+            "url": url,
+            "type": "POST",
+            "dataType": "json",
+            "success": function (json) {
+                if (json.state === 200) {
+                    $("#cart-list").empty();
+                    var list = json.data;
+                    for (var i = 0; i < list.length; i++) {
+                        console.log(list[i].title + list[i].price + list[i].count);
+                        //计算这件商品小计
+                        var tempSum = list[i].count * list[i].price;
+                        tempSum = tempSum.toFixed(1);
+                        var html = '<tr>\n' +
+                            '<td>\n' +
+                            '<input type="checkbox" id="ck_item' + i + '" class="ckitem" onclick="calcTotal()"/>\n' +
+                            '<span id="product' + i + '" hidden="hidden">' + list[i].pid + '</span>' +
+                            '</td>\n' +
+                            '<td><img src="' + list[i].pImage + 'collect.png" width="110" /></td>\n' +
+                            '<td>' + list[i].title + '</td>\n' +
+                            '<td>¥<span id="goodsPrice' + i + '">' + list[i].price + '</span></td>\n' +
+                            '<td>\n' +
+                            '<input type="button" value="-" class="num-btn" onclick="reduceNum(' + i + ')" />\n' +
+                            '<input id="goodsCount' + i + '"  type="text" size="2" readonly="readonly" class="num-text" value="' + list[i].count + '">\n' +
+                            '<input class="num-btn" type="button" value="+" onclick="addNum(' + i + ')" />\n' +
+                            '</td>\n' +
+                            '<td><span  id="goodsCast' + i + '"> ' + '¥' + tempSum + '</span></td>\n' +
+                            '<td><input type="button" id="del_item_btn' + i + '" onclick="delCartItem(this, ' + list[i].id + ')" class="cart-del btn btn-default btn-xs" value="删除"/></td>\n' +
+                            '</tr>';
+                        // html = html.replace(/#{goods-panel}/g,'style="width: 100%;border: 1px solid#eeeeee;box-shadow: 0px 0px 0px #888888;padding: 3px;padding-bottom: 10px;margin-bottom: 30px;"');
+
+                        $("#cart-list").append(html);
+                    }
+                } else {
+                    alert(json.message);
+                }
+            }
+        });
+    }
+
+    //删除按钮,并且从数据库中删除
+    function delCartItem(btn, id) {
+        if (delCartItem_db(btn, id)) {
+            $(btn).parents("tr").remove();
+            alert("删除成功！");
+            //更新选中的总价
+            calcTotal();
+        }
+    }
+
+    //从数据库中删除
+    function delCartItem_db(btn, id) {
+        var url = "../../cart/deleteById";
+        // 发送ajax请求，并处理请求
+        $.ajax({
+            "url": url,
+            "type": "POST",
+            "data": {"id": id},
+            "dataType": "json",
+            "success": function (json) {
+                if (json.state === 200) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    }
+
+    //批量删除按钮
+    function selDelCart() {
+        //循环遍历所有tr
+        for (var i = 0; i < $(".cart-body tr").length; i++) {
+            if ($("#ck_item" + i).prop("checked")) {
+                $("#del_item_btn" + i).trigger("click");
+            }
+        }
+    }
+
+    //订单确定
+    function confirm_order() {
+        var ck_count = 0;
+        var data = '{"goods":[';
+        //循环遍历所有tr
+        for (var i = 0; i < $(".cart-body tr").length; i++) {
+            if ($("#ck_item" + i).prop("checked")) {
+                ck_count += 1;
+                var rowData = '{"pid":' + $("#product" + i).html() + ',"count":' + $("#goodsCount" + i).val() + '}';
+                if (ck_count > 1) {
+                    data += ',';
+                }
+                data += rowData;
+            }
+        }
+        data += ']}';
+        if (ck_count < 1) {
+            alert("未选择需要结算的商品！");
+        } else {
+            //跳转到订单确定界面
+            location.href = "orderConfirm.html?data=" + escape(JSON.stringify(data));
+        }
+    }
+</script>
+</body>
+
+</html>

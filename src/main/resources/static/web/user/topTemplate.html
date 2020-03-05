@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8"/>
+    <title>绿色农场</title>
+    <!--导入核心文件-->
+    <script src="../../bootstrap3/js/holder.js"></script>
+    <link href="../../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="../../bootstrap3/jquery-1.9.1.min.js"></script>
+    <script src="../../bootstrap3/js/bootstrap.js"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="../../bootstrap3/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/top.css"/>
+</head>
+
+<body>
+<header class="header">
+    <!--学子商城logo-->
+    <div class="row">
+        <div class="col-md-3">
+            <a href="index.html">
+                <img src="../../images/index/stumalllogo.png"/>
+            </a>
+        </div>
+        <!--快捷选项-->
+        <div class="col-md-9 top-item">
+            <ul class="list-inline pull-right">
+                <li><a href="favorites.html"><span class="fa fa-heart"></span>&nbsp;收藏</a></li>
+                <li class="li-split">|</li>
+                <li><a href="orders.html"><span class="fa fa-file-text"></span>&nbsp;订单</a></li>
+                <li class="li-split">|</li>
+                <li><a href="cart.html"><span class="fa fa-cart-plus"></span>&nbsp;购物车</a></li>
+                <li class="li-split">|</li>
+                <li>
+                    <style>
+                        .img_menu ul li#img_menu_li {
+                            width: 80px;
+                            position: relative;
+                        }
+
+                        #img_show_menu {
+                            width: 100px;
+                            height: auto;
+                            background: #fff;
+                            border: 1px #d0d0d0 solid;
+                            border-radius: 10px;
+                            position: absolute;
+                            top: 18px;
+                            left: 0px;
+                            z-index: 9999;
+                        }
+
+                        #img_show_menu ul {
+                            float: none;
+                            margin: 5px 0px;
+                        }
+
+                        #img_show_menu ul li {
+                            width: 100px;
+                            height: 24px;
+                            margin-left: 0px;
+                            float: none;
+                        }
+
+                        #img_show_menu ul li a {
+                            font: 12px/24px "Microsoft Yahei";
+                            color: #666666;
+                            text-align: center;
+                            border: none;
+                            border-radius: 0px;
+                        }
+
+                        #img_show_menu ul li a:hover {
+                            background: #ccc;
+                        }
+                    </style>
+                    <script>
+                        //个人信息维护下拉菜单样式
+                        $(function () {
+                            //个人信息维护下拉菜单
+                            $("#img_show_menu").hide();
+                            $("#img_menu_li").hover(function () {
+                                $("#img_show_menu").show();
+                            }, function () {
+                                $("#img_show_menu").hide();
+                            })
+                            // 鼠标移动到img_show_menu 的div上的时候img_show_menu div不会被隐藏
+                            $("#img_show_menu").hover(function () {
+                                $("#img_show_menu").show();
+                            }, function () {
+                                $("#img_show_menu").hide();
+                            })
+
+                        });
+
+                        function clearLoginCookie() {
+                            document.cookie = "avatar" + "=;expires=" + (new Date(0)).toGMTString();
+                            document.cookie = "id" + "=;expires=" + (new Date(0)).toGMTString();
+                            document.cookie = "username" + "=;expires=" + (new Date(0)).toGMTString();
+                        }
+                    </script>
+                    <div class="img_menu">
+                        <ul class="img_menu_ul">
+                            <li id="img_menu_li">
+                                <a href="userdata.html"><img id="img-avatar1" src="../../images/index/user.jpg"
+                                                             class="top_img"/></a>
+                                <div id="img_show_menu" style="display: none">
+                                    <ul>
+                                        <li><a href="password.html">修改密码</a></li>
+                                        <li><a href="userdata.html">个人资料</a></li>
+                                        <li><a href="upload.html">上传头像</a></li>
+                                        <li><a href="address.html">收货管理</a></li>
+                                        <li><a href="login.html" onclick="clearLoginCookie()">退出登录</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<!--导航 -->
+<!--分割导航和顶部-->
+<div class="row top-nav">
+    <div class="col-md-6">
+        <ul class="nav nav-pills">
+            <li>
+                <a href="#"></a>
+            </li>
+            <li class="active"><a href="index.html"><span class="fa fa-home"></span></a></li>
+            <li><a href="productList.html"><span>农产租赁</span></a></li>
+            <li><a href="productList.html"><span>农产品</span></a></li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <form action="search.html" class="form-inline pull-right" role="form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="search" name="search" placeholder="请输入商品名称进行搜索">
+            </div>
+            <button type="submit" class="btn btn-default btn-sm"><span class="fa fa-search"></span></button>
+        </form>
+    </div>
+</div>
+<!--头部结束-->
+</body>
+
+</html>

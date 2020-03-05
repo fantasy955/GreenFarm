@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8"/>
+    <title>绿色农场</title>
+    <!--导入核心文件-->
+    <script src="../../bootstrap3/js/holder.js"></script>
+    <link href="../../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="../../bootstrap3/jquery-1.8.3.min.js"></script>
+    <script src="../../bootstrap3/js/bootstrap.js"></script>
+    <script src="../../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/top.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="../../bootstrap3/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/top.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/footer.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="../../css/favorites.css" />-->
+    <!--<link rel="stylesheet" type="text/css" href="../../css/imgmove.css"/>-->
+    <script src="../../js/favorites.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/imgmove.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+<div id="my_top"></div>
+<!--导航结束-->
+<div class="col-md-offset-1 col-md-10"><b>农产品</b></div>
+<div id="line1" class="col-md-offset-1 col-md-10"></div>
+
+
+<div class="col-md-offset-1 col-md-10">
+    <h5 id="page" align="center">
+    </h5>
+</div>
+
+<link rel="stylesheet" type="text/css" href="../../css/imgmove.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/favorites.css"/>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#my_top").append(top_html);
+        // 在登录之后，会将 头像数据放到cookies中，我们需要在这里取到
+        // 头像的数据，并把它放在cookie中
+        if ($.cookie("avatar") != null) {
+            $("#img-avatar1").attr("src", $.cookie("avatar"));
+        }
+        var pageIndex = 1;
+        var pageSize = 4;
+        findOnSellPage(pageIndex, pageSize);
+    });
+
+    function pageInfo(pageIndex, pageCount, pageSize) {
+        $("#page").empty();
+        var beforePageIndex = pageIndex - 1, nextPageIndex = pageIndex + 1;
+        //首先设置有没有上一页
+        if (pageIndex === 1) {
+            var html = '<span>' + 1 + '</span>';
+            html = $("#page").append(html);
+        } else {
+            var html = '<a href="javascript:findOnSellPage(' + beforePageIndex + ', ' + pageSize + ');">上一页</a>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + 1 + ', ' + pageSize + ');">' + 1 + '</a>';
+            html = $("#page").append(html);
+        }
+        //如果pageIndex < 6，页数直接全部显示
+        if (pageCount < 6) {
+            for (var i = 2; i < 6 && i < pageCount; ++i) {
+                var html = '&nbsp';
+                if (i !== pageIndex) {
+                    html += '<a href="javascript:findOnSellPage(' + i + ', ' + pageSize + ');">' + i + '</a>';
+                } else {
+                    html += '<span>' + i + '</span>';
+                }
+                html = $("#page").append(html);
+            }
+        } else if (pageIndex === 1) {
+            //显示1,2(超链接),3(超链接)
+            var html = '&nbsp<a href="javascript:findOnSellPage(' + 2 + ', ' + pageSize + ');">' + 2 + '</a>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + 3 + ', ' + pageSize + ');">' + 3 + '</a>';
+            html += '&nbsp<span>...</span>';
+            html = $("#page").append(html);
+        } else if (pageIndex === 2) {
+            //显示1(超链接),2,3(超链接)
+            var html = '&nbsp<span>' + 2 + '</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + 3 + ', ' + pageSize + ');">' + 3 + '</a>';
+            html += '&nbsp<span>...</span>';
+            html = $("#page").append(html);
+        } else if (pageIndex === 3) {
+            //显示1(超链接),2(超链接),3,4(超链接)
+            var html = '&nbsp<a href="javascript:findOnSellPage(' + 2 + ', ' + pageSize + ');">' + 2 + '</a>';
+            html += '&nbsp<span>' + 3 + '</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + 4 + ', ' + pageSize + ');">' + 4 + '</a>';
+            html += '&nbsp<span>...</span>';
+            html = $("#page").append(html);
+        } else if (pageIndex + 2 === pageCount) {
+            //显示...,beforePageIndex(超链接),pageIndex,nextPageIndex(超链接),pageCount(超链接)
+            var html = '&nbsp<span>...</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + beforePageIndex + ', ' + pageSize + ');">' + beforePageIndex + '</a>';
+            html += '&nbsp<span>' + pageIndex + '</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + nextPageIndex + ', ' + pageSize + ');">' + nextPageIndex + '</a>';
+            html = $("#page").append(html);
+        } else if (pageIndex + 1 === pageCount) {
+            //显示...,beforePageIndex(超链接),pageIndex,pageCount(超链接)
+            var html = '&nbsp<span>...</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + beforePageIndex + ', ' + pageSize + ');">' + beforePageIndex + '</a>';
+            html += '&nbsp<span>' + pageIndex + '</span>';
+            html = $("#page").append(html);
+        } else if (pageIndex === pageCount) {
+            //显示....,beforeBeforePageIndex(超链接),beforePageIndex(超链接),pageIndex
+            var beforeBeforePageIndex = pageIndex - 2;
+            var html = '&nbsp<span>...</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + beforeBeforePageIndex + ', ' + pageSize + ');">' + beforeBeforePageIndex + '</a>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + beforePageIndex + ', ' + pageSize + ');">' + beforePageIndex + '</a>';
+            html = $("#page").append(html);
+        } else {
+            //显示1(超链接)....,beforePageIndex(超链接),pageIndex,nextPageIndex,...,pageCount(超链接)
+            var html = '&nbsp<span>...</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + beforePageIndex + ', ' + pageSize + ');">' + beforePageIndex + '</a>';
+            html += '&nbsp<span>' + pageIndex + '</span>';
+            html += '&nbsp<a href="javascript:findOnSellPage(' + nextPageIndex + ', ' + pageSize + ');">' + nextPageIndex + '</a>';
+            html += '&nbsp<span>...</span>';
+            html = $("#page").append(html);
+        }
+        //设置有没有下一页
+        if (pageCount > 1) {
+            if (pageIndex === pageCount) {
+                var html = '&nbsp<span>' + pageIndex + '</span>';
+                html = $("#page").append(html);
+            } else {
+                var html = '&nbsp<a href="javascript:findOnSellPage(' + pageCount + ', ' + pageSize + ');">' + pageCount + '</a>';
+                html += '&nbsp<a href="javascript:findOnSellPage(' + nextPageIndex + ', ' + pageSize + ');">下一页</a>';
+                html = $("#page").append(html);
+            }
+        }
+    }
+
+    function findOnSellPage(pageIndex, pageSize) {
+        var url = "../../farm_product/findOnSellByPage";
+        // 发送ajax请求，并处理请求
+        $.ajax({
+            "url": url,
+            "type": "POST",
+            "data": {"pageIndex": pageIndex, "pageSize": pageSize},
+            "dataType": "json",
+            "success": function (json) {
+                if (json.state === 200) {
+                    //设置上一页、下一页
+                    pageInfo(pageIndex, json.count, pageSize);
+                    console.log("count=" + json.count);
+                    $("#line1").empty();
+                    var list = json.data;
+                    for (var i = 0; i < list.length; i++) {
+                        console.log(list[i].image + "-" + list[i].title);
+                        var html = '<div class="col-md-3">'
+                            + '<div class="goods-panel">'
+                            + '<div class="move-img img-search">'
+                            + '<img src="../../..#{image}collect.png" width="100%"/>'
+                            + '</div>'
+                            + '<h4>¥#{price}</h4>'
+                            + '<h5 class="text-row-3"><a href="product.html?id=#{id}"><small>#{title}</small></a></h5>'
+                            + '<span>'
+                            + '<a href="javascript:void(0)" class="btn btn-default btn-xs add-fav"><span class="fa fa-heart"></span>添加收藏</a>'
+                            + '<a href="cart.html" class="btn btn-default btn-xs add-cart"><span class="fa fa-cart-arrow-down"></span>加入购物车</a>'
+                            + '</span>'
+                            + '</div>'
+                            + '</div>';
+
+                        html = html.replace(/#{id}/g, list[i].id);
+                        html = html.replace(/#{image}/g, list[i].image);
+                        html = html.replace(/#{price}/g, list[i].price);
+                        html = html.replace(/#{title}/g, list[i].title);
+                        // html = html.replace(/#{goods-panel}/g,'style="width: 100%;border: 1px solid#eeeeee;box-shadow: 0px 0px 0px #888888;padding: 3px;padding-bottom: 10px;margin-bottom: 30px;"');
+
+                        $("#line1").append(html);
+                        $("#line1").trigger('create')
+                    }
+                } else {
+                    alert(json.message);
+                }
+            }
+        });
+    }
+</script>
+<link rel="stylesheet" type="text/css" href="../../css/imgmove.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/favorites.css"/>
+</body>
+<link rel="stylesheet" type="text/css" href="../../css/imgmove.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/favorites.css"/>
+</html>

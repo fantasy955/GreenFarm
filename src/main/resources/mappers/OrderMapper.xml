@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="edu.cn.green_farm.mapper.OrderMapper">
+    <!--添加一个订单到数据库-->
+    <!--List<Order> Integer addOrder(Order order);-->
+    <insert id="addOrder" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cn.green_farm.entity.Order">
+        INSERT INTO t_order(
+        uid, ono, recv_name, recv_phone,
+        recv_district,recv_address,pay,
+        order_time, status, created_time, created_user
+        ) VALUES (
+        #{uid},#{ono},#{recvName},#{recvPhone},
+        #{recvDistrict},#{recvAddress},#{pay},
+        #{orderTime},#{status},#{createdTime},#{createdUser}
+        )
+    </insert>
+
+    <!--添加一个订单item list-->
+    <!--Integer addOrderItems(List<OrderItem> orderItems);-->
+    <insert id="addOrderItems" useGeneratedKeys="true" keyProperty="id"
+            parameterType="edu.cn.green_farm.entity.OrderItem">
+        INSERT INTO t_order_item(
+        ono, goods_id, goods_count, goods_price
+        ) VALUES
+        <foreach collection="list" item="orderItem" separator=",">
+            (#{orderItem.ono}, #{orderItem.goodsId}, #{orderItem.goodsCount}, #{orderItem.goodsPrice})
+        </foreach>
+    </insert>
+
+
+    <!--得到用户的所有订单数据-->
+    <!--List<Order> findOrdersByUid(Integer uid);-->
+    <select id="findOrdersByUid" resultType="edu.cn.green_farm.entity.Order">
+        SELECT
+        id id, uid, ono ono, order_time orderTime, recv_name recvName, pay pay, status status,
+        recv_phone recvPhone, recv_address recvAddress, recv_district recvDistrict
+        FROM
+        t_order
+        WHERE
+        uid=#{uid}
+    </select>
+
+    <!--通过order no 查询该订单的所有OrderItem -->
+    <!--List<OrderItem> findOrderItemsByOno(Integer ono);-->
+    <select id="findOrderItemsByOno" resultType="edu.cn.green_farm.entity.OrderItem">
+        SELECT
+        t_order_item.id id, oid oid, t_order_item.ono ono, goods_id goodsId, image goodsImage,
+        title goodsTitle, goods_price goodsPrice, goods_count goodsCount
+        FROM
+        t_order_item
+        INNER JOIN t_farm_product
+        ON t_order_item.goods_id = t_farm_product.id
+        WHERE
+        ono=#{ono}
+    </select>
+
+</mapper>

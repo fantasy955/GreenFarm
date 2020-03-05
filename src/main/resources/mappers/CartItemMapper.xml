@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="edu.cn.green_farm.mapper.CartItemMapper">
+
+    <!--添加一个商品到购物车-->
+    <!-- public Integer add(CartItem cartItem);-->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cn.green_farm.entity.CartItem">
+        INSERT INTO t_cart(
+        uid, pid, count,
+        created_user,created_time
+        ) VALUES (
+        #{uid}, #{pid},#{count},
+        #{createdUser},#{createdTime}
+        )
+    </insert>
+
+    <!--通过id查找cart里的商品信息 -->
+    <!--public CartItem findById(Integer id); -->
+    <select id="findById" resultType="edu.cn.green_farm.entity.CartItem">
+        SELECT
+        t_cart.id, uid, pid, price, title, count,image pImage,
+        t_cart.created_user createUser,t_cart.created_time createTime,
+        t_cart.modified_user modifiedUser,t_cart.modified_time modifiedTime
+        FROM t_cart
+        INNER JOIN t_farm_product
+        ON t_cart.pid = t_farm_product.id
+        WHERE
+        t_cart.id = #{id}
+    </select>
+
+    <!--通过uid、pid查找cart里的商品信息 -->
+    <!--public CartItem findByUidAndPid(Integer uid, Integer pid); -->
+    <select id="findByUidAndPid" resultType="edu.cn.green_farm.entity.CartItem">
+        SELECT
+        id, uid, pid, count
+        FROM t_cart
+        WHERE
+        uid=#{uid} AND t_cart.pid=#{pid}
+    </select>
+
+    <!--通过用户id查找该用户的购物车 -->
+    <!--public List<CartItem> findByUid(Integer uid); -->
+    <select id="findByUid" resultType="edu.cn.green_farm.entity.CartItem">
+        SELECT
+        t_cart.id, uid, pid, price, title, count,image pImage,
+        t_cart.created_user createUser, t_cart.created_time createTime,
+        t_cart.modified_user modifiedUser, t_cart.modified_time modifiedTime
+        FROM t_cart
+        INNER JOIN t_farm_product
+        ON t_cart.pid = t_farm_product.id
+        WHERE
+        uid = #{uid}
+    </select>
+
+    <!--更新CartItem(只能更新数量) -->
+    <!--public Integer update(CartItem cartItem);-->
+    <update id="update">
+        UPDATE t_cart
+        SET
+        <if test="count!=null">
+            count=#{count},
+        </if>
+        modified_user=#{modifiedUser},
+        modified_time=#{modifiedTime}
+        where
+        id=#{id}
+    </update>
+
+    <!--通过id删除购物车中的信息 -->
+    <!--public Integer deleteById(Integer id);-->
+    <delete id="deleteById">
+        DELETE FROM t_cart
+        WHERE id=#{id}
+    </delete>
+</mapper>
+

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--edge浏览器H5兼容设置-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--360浏览器H5兼容设置-->
+    <meta name="renderer" content="webkit"/>
+    <title>绿色农场</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--导入核心文件-->
+    <script src="../../bootstrap3/js/holder.js"></script>
+    <link href="../../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="../../bootstrap3/jquery-1.9.1.min.js"></script>
+    <script src="../../bootstrap3/js/bootstrap.js"></script>
+    <script src="../../js/top.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/leftnavigation.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="../../bootstrap3/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/top.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/footer.css"/>
+    <script src="../../js/adddel.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layui-v2.5.5/layui/css/layui.css" media="all">
+    <script src="../../layui-v2.5.5/layui/layui.js" charset="utf-8"></script>
+    <script src="../../js/uploadBtn.js" charset="utf-8"></script>
+</head>
+<body>
+<!--头部-->
+<header class="header">
+    <div id="my_top"></div>
+</header>
+
+<!--导航结束-->
+<!-- <div class="container"> -->
+<!--左部导航-->
+<div id="left-navigation"></div>
+<div class="col-md-10">
+    <div class="panel panel-default">
+        <ul class="nav nav-tabs">
+            <li><a href="myproducts.html">订单管理 </a></li>
+            <li><a href="myproducts.html">租赁管理</a></li>
+            <li><a href="myproducts.html">产品管理</a></li>
+        </ul>
+        <div class="panel-body">
+            <form class="layui-form" id="form-productInfo" action="" lay-filter="productInfo">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <nobr><label class="layui-form-label"><b>产品标题</b></label></nobr>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"
+                                   placeholder="请输入产品名称"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><b>类别</b></label>
+                        <div class="layui-input-inline">
+                            <select id="itemType" name="itemType" lay-verify="required" lay-search="">
+                                <option value="">请选择产品类别</option>
+                                <option value="1">test</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <nobr>
+                            <lable class="layui-form-label"><b>价格</b></lable>
+                        </nobr>
+                        <div class="layui-input-block">
+                            <input type="number" name="price" lay-verify="required" autocomplete="off"
+                                   class="layui-input" placeholder="请输入产品价格(元/kg)"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <lable class="layui-form-label"><b>库存</b></lable>
+                        <div class="layui-input-inline">
+                            <input type="number" name="num" lay-verify="required" autocomplete="off" class="layui-input"
+                                   placeholder="请输入产品库存"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <nobr>
+                        <lable class="layui-form-label"><b>产品卖点</b></lable>
+                    </nobr>
+                    <div class="layui-input-block">
+                        <textarea name="sellPoint" lay-verify="product_introduction" placeholder="请输入内容"
+                                  class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <nobr>
+                            <lable class="layui-form-label"><b>产品封面</b></lable>
+                        </nobr>
+                        <div class="layui-input-block">
+                            <img id="img-collect" src="../../images/portal/11DELLran7000R1605Ssilvery/1_big.png"
+                                 class="img-rounded" height="180px" width="230px">
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn" id="btn_addImages">修改封面</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-in">
+                        <nobr>
+                            <lable class="layui-form-label"><b>产品样图</b></lable>
+                        </nobr>
+                        <div class="layui-input-block">
+                            <div class="layui-inline">
+                                <img id="img-1" src="../../images/portal/11DELLran7000R1605Ssilvery/1_big.png"
+                                     class="img-rounded" height="84px" width="84px">
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn layui-btn-sm" id="btn_p1">修改样图1</button>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <img id="img-2" src="../../images/portal/11DELLran7000R1605Ssilvery/1_big.png"
+                                     class="img-rounded" height="84px" width="84px">
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn layui-btn-sm" id="btn_p2">修改样图2</button>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <img id="img-3" src="../../images/portal/11DELLran7000R1605Ssilvery/1_big.png"
+                                     class="img-rounded" height="84px" width="84px">
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn layui-btn-sm" id="btn_p3">修改样图3</button>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <img id="img-4" src="../../images/portal/11DELLran7000R1605Ssilvery/1_big.png"
+                                     class="img-rounded" height="84px" width="84px">
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn layui-btn-sm" id="btn_p4">修改样图4</button>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <img id="img-5" src="../../images/portal/11DELLran7000R1605Ssilvery/1_big.png"
+                                     class="img-rounded" height="84px" width="84px">
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn layui-btn-sm" id="btn_p5">修改样图5</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <nobr>
+                        <lable class="layui-form-label" style="color: #0000FF"><b>返回</b></lable>
+                    </nobr>
+                    <div class="layui-input-block">
+                        <!--提交按钮-->
+                        <!--<div class="layui-inline">-->
+                        <button id="btn-submit" type="submit" lay-submit="" class="layui-btn"
+                                lay-filter="btn-updateProductInfo">更新
+                        </button>
+                        <button id="btn-reset" class="layui-btn">重置</button>
+                        <button id="btn-uploadImage" type="reset"
+                                class="layui-btn layui-btn-primary layui-hide"></button>
+                        <!--</div>-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- </div> -->
+<script type="text/javascript">
+
+    producInfo = '';
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+        form.val('productInfo', {
+            "title": "贤心" // "name": "value"
+            , "itemType": "1"
+            , "price": 1
+            , "num": 13
+            , "sellPoint": '卖点'
+            , "list-productImage": "女"
+        });
+        //表单赋值
+        layui.$('#btn-reset').on('click', function () {
+            form.val('example', {
+                "title": "贤心" // "name": "value"
+                , "itemType": "1"
+                , "price": 1
+                , "num": 13
+                , "sellPoint": '卖点'
+                , "list-productImage": "女"
+            });
+        });
+
+
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+        laydate.render({
+            elem: '#date1'
+        });
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 2) {
+                    return '产品名称至少得2个字符!';
+                }
+            }
+            , product_introduction: function (value) {
+                if (value.length < 1) {
+                    return '产品介绍不能为空!';
+                }
+            }
+            , productImages: function (value) {
+                console.log(value)
+            }
+        });
+        //监听提交
+        form.on('submit(btn-updateProductInfo)', function (data) {
+            var table = document.getElementById("table-productImageInfo");
+            var imageNum = table.rows.length - 1;
+            producInfo = $("#form-productInfo").serialize();
+            console.log(producInfo);
+            if (imageNum != 5) {
+                layer.open({
+                    content: "您选择了" + imageNum + "张图片，必须上传5张产品图片",
+                    yes: function (index, layero) {//layero 当前层DOM对象
+                        //do something
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    }
+                });
+                return false;
+            } else {
+                document.getElementById("btn-uploadImage").click();
+            }
+            return false;
+        });
+    });
+
+    function showProductTypes() {
+        var url = "../../farmproducttypes/typelist/";
+        $.ajax({
+            "url": url,
+            "type": "POST",
+            "dataType": "json",
+            "success": function (json) {
+                // 常规习惯输出，检验结果
+                // 取值
+                var list = json.data;
+                for (var i = 0; i < list.length; i++) {
+                    // 输出测试
+                    console.log(list[i].id + "-" + list[i].name);
+                    // 赋值
+                    var op = '<option value="' + list[i].id + '">' + list[i].typeName + '</option>';
+                    $("#itemType").append(op);
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#my_top").append(top_html_business);
+        $("#left-navigation").append(leftNavigationBusiness1);
+        if ($.cookie("avatar") != null) {
+            $("#img-avatar1").attr("src", $.cookie("avatar"));
+        }
+        // showProductTypes();
+    });
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#btn_addImages'
+            , url: '/upload/'
+            , auto: false
+            , choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#img-collect').attr('src', result); //图片链接（base64）
+                });
+            }
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#img-collect').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

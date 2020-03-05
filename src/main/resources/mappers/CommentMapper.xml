@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="edu.cn.green_farm.mapper.CommentMapper">
+
+    <!--添加评论-->
+    <!--public Integer add(Comment comment);-->
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="edu.cn.green_farm.entity.Comment">
+        INSERT INTO t_comment(
+        product_id, uid,
+        content, created_time
+        ) VALUES (
+        #{productId},#{uid},
+        #{content},#{createdTime}
+        )
+    </insert>
+
+    <!--通过id查找评论-->
+    <!--public Comment findById(Integer id);-->
+    <select id="findById" resultType="edu.cn.green_farm.entity.Comment">
+        SELECT
+        t_comment.id, product_id productId, uid, username,
+        avatar userAvatar, content, t_comment.created_time createdTime
+        FROM
+        t_comment
+        INNER JOIN t_user
+        ON t_user.id = t_comment.uid
+        WHERE
+        id=#{id}
+    </select>
+
+    <!--查找农产品的所有评论-->
+    <!--public List<Comment> findByProductId(Integer productId);-->
+    <select id="findByProductId" resultType="edu.cn.green_farm.entity.Comment">
+        SELECT
+        t_comment.id, product_id productId, uid, username,
+        avatar userAvatar, content, t_comment.created_time createdTime
+        FROM
+        t_comment
+        INNER JOIN t_user
+        ON t_user.id = t_comment.uid
+        WHERE
+        product_id=#{productId}
+    </select>
+
+    <!--查找用户的所有评论-->
+    <!--public List<Comment> findByUid(Integer uid);-->
+    <select id="findByUid" resultType="edu.cn.green_farm.entity.Comment">
+        SELECT
+        t_comment.id, product_id productId, uid, username,
+        avatar userAvatar, content, t_comment.created_time createdTime
+        FROM
+        t_comment
+        INNER JOIN t_user
+        ON t_user.id = t_comment.uid
+        WHERE
+        uid=#{uid}
+    </select>
+
+    <!-- 通过评论id删除评论-->
+    <!--public Integer deleteById(Integer id);-->
+    <delete id="deleteById">
+        DELETE FROM t_comment
+        WHERE
+        id=#{id}
+    </delete>
+
+    <!-- 删除农产品的所有评论-->
+    <!--public Integer deleteByProductId(Integer productId);-->
+    <delete id="deleteByProductId">
+        DELETE FROM t_comment
+        WHERE
+        product_id=#{productId}
+    </delete>
+
+    <!-- 删除用户的所有评论-->
+    <!--public Integer deleteByUid(Integer uid);-->
+    <delete id="deleteByUid">
+        DELETE FROM t_comment
+        WHERE
+        uid=#{uid}
+    </delete>
+</mapper>

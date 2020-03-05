@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--edge浏览器H5兼容设置-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--360浏览器H5兼容设置-->
+    <meta name="renderer" content="webkit"/>
+    <title>绿色农场</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--导入核心文件-->
+    <script src="../../bootstrap3/js/holder.js"></script>
+    <link href="../../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <script src="../../bootstrap3/jquery-1.9.1.min.js"></script>
+    <script src="../../bootstrap3/js/bootstrap.js"></script>
+    <script src="../../js/top.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/leftnavigation.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../bootstrap3/js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="../../bootstrap3/font-awesome-4.7.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/layout.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/top.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/footer.css"/>
+    <script src="../../js/adddel.js" type="text/javascript" charset="utf-8"></script>
+
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layui-v2.5.5/layui/css/layui.css" media="all">
+    <script src="../../layui-v2.5.5/layui/layui.js" charset="utf-8"></script>
+</head>
+<body>
+<!--头部-->
+<header class="header">
+    <div id="my_top"></div>
+</header>
+
+<!--导航结束-->
+<!-- <div class="container"> -->
+<!--左部导航-->
+<div id="left-navigation"></div>
+<div class="col-md-10">
+    <div class="panel panel-default">
+        <ul class="nav nav-tabs">
+            <li><a href="myproducts.html">订单管理 </a></li>
+            <li><a href="myproducts.html">租赁管理</a></li>
+            <li><a href="myproducts.html">产品管理</a></li>
+        </ul>
+        <div class="panel-body">
+            <form class="layui-form" id="form-productInfo" action="" lay-filter="productInfo">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <nobr><label class="layui-form-label"><b>产品标题</b></label></nobr>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" lay-verify="title" autocomplete="off" class="layui-input"
+                                   placeholder="请输入产品名称"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><b>类别</b></label>
+                        <div class="layui-input-inline">
+                            <select id="itemType" name="itemType" lay-verify="required" lay-search="">
+                                <option value="">请选择产品类别</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <nobr>
+                            <lable class="layui-form-label"><b>价格</b></lable>
+                        </nobr>
+                        <div class="layui-input-block">
+                            <input type="number" name="price" lay-verify="required" autocomplete="off"
+                                   class="layui-input" placeholder="请输入产品价格(元/kg)"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <lable class="layui-form-label"><b>库存</b></lable>
+                        <div class="layui-input-inline">
+                            <input type="number" name="num" lay-verify="required" autocomplete="off" class="layui-input"
+                                   placeholder="请输入产品库存"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <nobr>
+                        <lable class="layui-form-label"><b>产品卖点</b></lable>
+                    </nobr>
+                    <div class="layui-input-block">
+                        <textarea name="sellPoint" lay-verify="product_introduction" placeholder="请输入内容"
+                                  class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <nobr>
+                            <lable class="layui-form-label"><b>样图（5张）</b></lable>
+                        </nobr>
+                        <div class="layui-input-block">
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn" id="btn_addImages">选择图片</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        <div class="layui-upload">
+                            <div class="layui-upload-list">
+                                <table class="layui-table" id="table-productImageInfo">
+                                    <thead>
+                                    <tr>
+                                        <th>文件名</th>
+                                        <th>大小</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="list-productImage" lay-verify="productImages"></tbody>
+                                </table>
+                            </div>
+                            <!--<button type="button" class="layui-btn" id="uploadImageListAction">开始上传</button>-->
+                        </div>
+                        <!--<blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">-->
+                        <!--预览图：-->
+                        <!--<div class="layui-upload-list" id="product_images"></div>-->
+                        <!--</blockquote>-->
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <nobr>
+                        <lable class="layui-form-label" style="color: #0000FF"><b>返回</b></lable>
+                    </nobr>
+                    <div class="layui-input-block">
+                        <!--提交按钮-->
+                        <!--<div class="layui-inline">-->
+                        <button id="btn-submit" type="submit" lay-submit="" class="layui-btn"
+                                lay-filter="btn-subProductInfo">保存
+                        </button>
+                        <button id="btn-reset" type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        <button id="btn-uploadImage" type="reset"
+                                class="layui-btn layui-btn-primary layui-hide"></button>
+                        <!--</div>-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- </div> -->
+<script type="text/javascript">
+    producInfo = '';
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+        laydate.render({
+            elem: '#date1'
+        });
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 2) {
+                    return '产品名称至少得2个字符!';
+                }
+            }
+            , product_introduction: function (value) {
+                if (value.length < 1) {
+                    return '产品介绍不能为空!';
+                }
+            }
+            , productImages: function (value) {
+                console.log(value)
+            }
+        });
+        //监听提交
+        form.on('submit(btn-subProductInfo)', function (data) {
+            var table = document.getElementById("table-productImageInfo");
+            var imageNum = table.rows.length - 1;
+            producInfo = $("#form-productInfo").serialize();
+            console.log(producInfo);
+            if (imageNum != 5) {
+                layer.open({
+                    content: "您选择了" + imageNum + "张图片，必须上传5张产品图片",
+                    yes: function (index, layero) {//layero 当前层DOM对象
+                        //do something
+                        layer.close(index); //如果设定了yes回调，需进行手工关闭
+                    }
+                });
+                return false;
+            } else {
+                document.getElementById("btn-uploadImage").click();
+            }
+            return false;
+        });
+
+        $("#btn-reset").click(function () {
+            console.log('reset');
+            $("#list-productImage").html("");
+
+        });
+
+
+        layui.use('upload', function () {
+            var $ = layui.jquery
+                , upload = layui.upload;
+        });
+
+    });
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+
+        //上传产品图片
+        var imageListView = $('#list-productImage')
+            , uploadListIns = upload.render({
+            elem: '#btn_addImages'
+            , url: '../../farm_product/upload.do/'
+            , multiple: true
+            , accept: 'file' //普通文件
+            , exts: 'png|jpg|jpeg|bmp' //只允许上传图片
+            , size: 5 * 1024 * 1024 //kb
+            , auto: false
+            , bindAction: '#btn-uploadImage'
+            , choose: function (obj) {
+                var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+                //读取本地文件
+                obj.preview(function (index, file, result) {
+                    var tr = $(['<tr id="upload-' + index + '">'
+                        , '<td>' + file.name + '</td>'
+                        , '<td>' + (file.size / 1014).toFixed(1) + 'kb</td>'
+                        , '<td>等待上传</td>'
+                        , '<td>'
+                        , '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                        , '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                        , '</td>'
+                        , '</tr>'].join(''));
+
+                    //单个重传
+                    tr.find('.demo-reload').on('click', function () {
+                        obj.upload(index, file);
+                    });
+
+                    //删除
+                    tr.find('.demo-delete').on('click', function () {
+                        delete files[index]; //删除对应的文件
+                        tr.remove();
+                        uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                    });
+
+                    imageListView.append(tr);
+                });
+            }
+            , before: function () {
+                $.ajax({
+                    "url": "../../farm_product/mkdir",
+                    "type": "POST",
+                    "success": function () {
+                        console.log("mkdir ok");
+                    },
+                    "error": function () {
+                        console.log("mkdir failed");
+                    }
+                });
+            }
+            , done: function (res, index, upload) {
+                console.log(index);
+                if (res.state == 200) { //上传成功
+                    var tr = imageListView.find('tr#upload-' + index)
+                        , tds = tr.children();
+                    tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                    tds.eq(3).html(''); //清空操作
+                    return delete this.files[index]; //删除文件队列已经上传成功的文件
+                }
+                this.error(index, upload);
+            }
+            , allDone: function (obj) {
+                if (obj.successful < 5) {
+                    window.location.href = "#";
+                    return false;
+                }
+
+                var url = "../../farm_product/add";
+                console.log("产品参数：" + producInfo);
+                $.ajax({
+                    "url": url,
+                    "data": producInfo,
+                    "type": "POST",
+                    "dataType": "json",
+                    "success": function (json) {
+                        console.log(json);
+                        if (json.state == 200) {
+                            layer.open({
+                                content: '成功添加上架商品请求!',
+                                yes: function (index, layero) {
+                                    //do something
+                                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                    window.location.href = "myproducts.html";
+                                }
+                            });
+                        } else {
+                            layer.open({
+                                content: json.message,
+                                yes: function (index, layero) {//layero 当前层DOM对象
+                                    //do something
+                                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+                                }
+                            });
+                        }
+                        document.getElementById("btn-reset").click();
+                    }
+                });
+            }
+            , error: function (index, upload) {
+                var tr = imageListView.find('tr#upload-' + index)
+                    , tds = tr.children();
+                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+            }
+        });
+    });
+
+    function showProductTypes() {
+        var url = "../../farmproducttypes/typelist/";
+        $.ajax({
+            "url": url,
+            "type": "POST",
+            "dataType": "json",
+            "success": function (json) {
+                // 常规习惯输出，检验结果
+                // 取值
+                var list = json.data;
+                for (var i = 0; i < list.length; i++) {
+                    // 输出测试
+                    console.log(list[i].id + "-" + list[i].name);
+                    // 赋值
+                    var op = '<option value="' + list[i].id + '">' + list[i].typeName + '</option>';
+                    $("#itemType").append(op);
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#my_top").append(top_html_business);
+        $("#left-navigation").append(leftNavigationBusiness1);
+        if ($.cookie("avatar") != null) {
+            $("#img-avatar1").attr("src", $.cookie("avatar"));
+        }
+        showProductTypes();
+    });
+
+</script>
+</body>
+</html>

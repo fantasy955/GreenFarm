@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="edu.cn.green_farm.mapper.FarmProductMapper">
+    <resultMap id="farmProductResultMap" type="edu.cn.green_farm.entity.FarmProduct">
+        <!--id表查询结果中的唯一标识-->
+        <id property="id" column="id"/>
+        <!--result表示对普通列名的映射，propertyi表对象属性名，column表查询出的列名-->
+        <result property="bid" column="bid"/>
+        <result property="item_type" column="item_type"/>
+        <result property="title" column="title"/>
+        <result property="sellPoint" column="sell_point"/>
+        <result property="price" column="price"/>
+        <result property="num" column="num"/>
+        <result property="image" column="image"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="modifiedTime" column="modified_time"/>
+        <result property="createdUser" column="created_user"/>
+        <result property="modifiedUser" column="modified_user"/>
+    </resultMap>
+    <!--插入一个农产品-->
+    <!--public Integer add(FarmProduct farmProduct)-->
+    <insert id="add" keyProperty="id" useGeneratedKeys="true" parameterType="edu.cn.green_farm.entity.FarmProduct">
+        INSERT INTO t_farm_product(
+        bid, item_type,
+        title, sell_point,
+        price, num, image,
+        status, priority,
+        created_time, modified_time,
+        created_user, modified_user
+        ) VALUES (
+        #{bid}, #{itemType},
+        #{title}, #{sellPoint},
+        #{price}, #{num}, #{image},
+        #{status}, #{priority},
+        #{createdTime}, #{modifiedTime},
+        #{createdUser}, #{modifiedUser}
+        )
+    </insert>
+
+    <!--通过id查找农产品-->
+    <!--public FarmProduct findById(Integer id);-->
+    <select id="findById" resultType="edu.cn.green_farm.entity.FarmProduct">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image, status, priority
+        FROM
+        t_farm_product
+        WHERE
+        id=#{id}
+    </select>
+
+    <!--通过bid查找农产品-->
+    <!--public List<FarmProduct> findByBid(Integer bid);-->
+    <select id="findByBid" resultType="edu.cn.green_farm.entity.FarmProduct">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image, status, priority
+        FROM
+        t_farm_product
+        WHERE
+        bid=#{bid}
+    </select>
+
+    <!--通过title模糊查找农产品-->
+    <!--public List<FarmProduct> findByTitleKey(String titleKey, Integer beginIndex, Integer size);-->
+    <select id="findByTitleKey" resultType="edu.cn.green_farm.entity.FarmProduct">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image,status,priority
+        FROM
+        t_farm_product
+        WHERE
+        status =1 AND title LIKE CONCAT('%', #{titleKey}, '%')
+        ORDER BY
+        priority desc
+        LIMIT #{beginIndex}, #{size}
+    </select>
+
+    <!--查找包含TitleKey关键字的农产品个数-->
+    <!--public Integer findByTitleKeyProductCount(String titleKey);-->
+    <select id="findByTitleKeyProductCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM
+        t_farm_product
+        WHERE
+        title LIKE CONCAT('%', #{titleKey}, '%')
+    </select>
+
+    <!--分页查询正在出售的农产品-->
+    <!--public List<FarmProduct> findOnSell(Integer beginIndex, Integer size);-->
+    <select id="findOnSell" resultType="edu.cn.green_farm.entity.FarmProduct">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image,status,priority
+        FROM
+        t_farm_product
+        WHERE
+        status =1
+        ORDER BY
+        priority desc
+        LIMIT #{beginIndex}, #{size}
+    </select>
+
+    <!--查询正在出售的农产品数量-->
+    <!--public Integer findOnSellFarmProductCount();-->
+    <select id="findOnSellFarmProductCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(id)
+        FROM
+        t_farm_product
+        WHERE
+        status =1
+    </select>
+
+    <!--获取最新的农产品信息（数量）-->
+    <!--public List<FarmProduct> findLastedFarmProduct(Integer size);-->
+    <select id="findLastedFarmProduct" resultType="edu.cn.green_farm.entity.FarmProduct">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image,status,priority
+        FROM
+        t_farm_product
+        WHERE
+        status =1
+        ORDER BY
+        modified_time desc
+        LIMIT 0, #{size}
+    </select>
+
+    <!--获取最热的农产品信息（数量）-->
+    <!--public List<FarmProduct> findHotFarmProduct(Integer size);-->
+    <select id="findHotFarmProduct" resultType="edu.cn.green_farm.entity.FarmProduct">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image,status,priority
+        FROM
+        t_farm_product
+        WHERE
+        status =1
+        ORDER BY
+        num desc
+        LIMIT 0, #{size}
+    </select>
+
+    <!--更新农产品-->
+    <!--public void update(FarmProduct farmProduct)-->
+    <update id="update">
+        UPDATE
+        t_farm_product
+        SET
+        <if test="itemType!=null">
+            item_type=#{itemType},
+        </if>
+        <if test="title!=null">
+            title=#{title},
+        </if>
+        <if test="sellPoint!=null">
+            sell_point=#{sellPoint},
+        </if>
+        <if test="price!=null">
+            price=#{price},
+        </if>
+        <if test="num!=null">
+            num=#{num},
+        </if>
+        <if test="image!=null">
+            status=#{status},
+        </if>
+        <if test="priority!=null">
+            priority=#{priority},
+        </if>
+        <if test="price!=null">
+            price=#{price},
+        </if>
+        <if test="image!=null">
+            image=#{image},
+        </if>
+        modified_user=#{modifiedUser},
+        modified_time=#{modifiedTime}
+        WHERE
+        id=#{id}
+    </update>
+
+    <!-- 删除农产品 -->
+    <!-- public Integer deleteById(Integer id); -->
+    <!--<delete id="deleteById">-->
+    <!--DELETE-->
+    <!--FROM-->
+    <!--t_farm_product-->
+    <!--WHERE-->
+    <!--id=#{id}-->
+    <!--</delete>-->
+
+    <!-- 删除农产品 -->
+    <!-- public Integer deleteById(Integer id); -->
+    <delete id="deleteById">
+        update t_farm_product
+        SET
+        status = -1
+        WHERE
+        id=#{id} AND bid =#{bid}
+    </delete>
+
+    <!-- 下架农产品 -->
+    <!-- public Integer deleteById(Integer id); -->
+    <delete id="unshelveById">
+        update t_farm_product
+        SET
+        status = 0
+        WHERE
+        id=#{id} AND bid =#{bid}
+    </delete>
+
+    <select id="getProductsByPageAndSizeAndBid" resultMap="farmProductResultMap">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image,status,priority,
+        created_time, modified_time,
+        created_user, modified_user
+        FROM
+        t_farm_product
+        WHERE
+        status >=0 AND bid = #{bid}
+        ORDER BY
+        modified_time desc
+        LIMIT #{index}, #{pageSize}
+    </select>
+
+    <select id="getProductsPageCountByPageSizeAndBid" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        t_farm_product
+        WHERE
+        status >=0 AND bid = #{bid}
+    </select>
+    <select id="getProductsCountByBid" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM
+        t_farm_product
+        WHERE
+        status >=0 AND bid = #{bid}
+    </select>
+
+    <select id="findByIdAndBid" resultMap="farmProductResultMap">
+        SELECT
+        id, bid, item_type itemType, title,
+        sell_point sellPoint, price,
+        num, image,status,priority,
+        created_time, modified_time,
+        created_user, modified_user
+        FROM
+        t_farm_product
+        WHERE
+        id =#{id} AND bid = #{bid}
+    </select>
+
+
+    <update id="onhelveByIdAndBid">
+        UPDATE
+        t_farm_product
+        SET
+        status = 3
+        WHERE
+        id =#{id} AND bid = #{bid}
+    </update>
+</mapper>
+
